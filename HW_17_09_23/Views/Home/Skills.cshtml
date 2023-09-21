@@ -10,14 +10,14 @@
 
 <p>Прізвище: @Model.LastName</p>
 <p>Ім'я: @Model.FirstName</p>
-<form method="get" id="searchForm">
+<form method="get">
     <div class="form-group">
         <label for="searchText">Пошук по навичках:</label>
-        <input type="text" id="searchText" name="searchText" class="form-control" value="@Context.Request.Query["searchText"]" />
+        <input type="text" id="searchText" name="searchText" class="form-control" value="@Context.Request.Query["searchText"]" form="searchForm" />
     </div>
-    @* <button type="submit" class="btn btn-primary">Пошук</button> *@
 </form>
-@* <form method="get" id="searchForm"> *@
+
+<form method="get" id="searchForm">
 <table class="table">
         <tr>
             <th>Навичка</th>
@@ -31,16 +31,7 @@
             </tr>
         }
     </table>
-@* </form> *@
+</form>
 
 
 @Html.ActionLink("Повернутися на головну сторінку", "Index")
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    $(function () {
-        $('#searchText').on('input', function () {
-            $('#searchForm').submit();
-        });
-    });
-</script>
