@@ -1,0 +1,46 @@
+﻿@*
+
+*@
+@{
+}
+@using HW_17_09_23.Models
+@model SkillsModel
+
+<h1>Сторінка навичок</h1>
+
+<p>Прізвище: @Model.LastName</p>
+<p>Ім'я: @Model.FirstName</p>
+<form method="get" id="searchForm">
+    <div class="form-group">
+        <label for="searchText">Пошук по навичках:</label>
+        <input type="text" id="searchText" name="searchText" class="form-control" value="@Context.Request.Query["searchText"]" />
+    </div>
+    @* <button type="submit" class="btn btn-primary">Пошук</button> *@
+</form>
+@* <form method="get" id="searchForm"> *@
+<table class="table">
+        <tr>
+            <th>Навичка</th>
+            <th>Значення (%)</th>
+        </tr>
+        @foreach (var skill in Model.Skills)
+        {
+            <tr>
+                <td>@skill.Name</td>
+                <td>@skill.Percentage%</td>
+            </tr>
+        }
+    </table>
+@* </form> *@
+
+
+@Html.ActionLink("Повернутися на головну сторінку", "Index")
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(function () {
+        $('#searchText').on('input', function () {
+            $('#searchForm').submit();
+        });
+    });
+</script>

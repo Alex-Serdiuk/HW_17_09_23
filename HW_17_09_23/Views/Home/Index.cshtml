@@ -1,0 +1,14 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@using HW_17_09_23.Models
+@model HomeModel
+
+<h1>Головна сторінка</h1>
+
+<img src="@Model.PhotoPath" alt="Ваше фото" style="width: 150px"/>
+<p>Інформація про мене: @Model.AboutMe</p>
+@Html.ActionLink("Перейти до сторінки навичок", "Skills")
+@* <a href="/Home/Skills">Перейти до сторінки навичок</a> *@
