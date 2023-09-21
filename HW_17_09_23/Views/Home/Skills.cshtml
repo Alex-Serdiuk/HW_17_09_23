@@ -10,14 +10,31 @@
 
 <p>Прізвище: @Model.LastName</p>
 <p>Ім'я: @Model.FirstName</p>
+
 <form method="get">
     <div class="form-group">
         <label for="searchText">Пошук по навичках:</label>
-        <input type="text" id="searchText" name="searchText" class="form-control" value="@Context.Request.Query["searchText"]" form="searchForm" />
+        <input type="text" id="searchText" name="searchText" class="form-control" value="@Context.Request.Query["searchText"]" autofocus />
     </div>
 </form>
 
-<form method="get" id="searchForm">
+<script>
+    // Отримуємо елемент <input>
+    var input = document.querySelector("input");
+
+    // Викликаємо метод focus () на елементі
+    input.focus();
+
+    // Викликаємо метод setSelectionRange () з параметрами, які дорівнюють довжині значення елемента
+    input.setSelectionRange(input.value.length, input.value.length);
+
+    // Додаємо другий обробник події input, який відправляє форму на сервер
+    input.addEventListener("input", function () {
+        this.form.submit();
+    });
+    
+</script>
+
 <table class="table">
         <tr>
             <th>Навичка</th>
@@ -31,7 +48,6 @@
             </tr>
         }
     </table>
-</form>
 
 
 @Html.ActionLink("Повернутися на головну сторінку", "Index")

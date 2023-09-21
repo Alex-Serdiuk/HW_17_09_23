@@ -41,7 +41,7 @@ public class HomeController : Controller
         Skills = allSkills,
     };
 
-    public IActionResult Skills(string searchText)
+    public async Task<IActionResult> Skills(string searchText)
     {
         List<Skill> filteredSkills;
 
