@@ -17,8 +17,4 @@
     <Folder Include="wwwroot\uploads\" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Include="wwwroot\images\user-image.png" />
-  </ItemGroup>
-
 </Project>
