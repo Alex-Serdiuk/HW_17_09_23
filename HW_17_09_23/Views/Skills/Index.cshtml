@@ -1,12 +1,12 @@
 ﻿@using HW_17_09_23.Models;
 @*
 *@
-@model List<AboutMe>
+@model AboutMe
 @{
     Layout = "_AdminLayout";
 }
 
-<h1>AboutMes</h1>
+<h1>List of Skills</h1>
 <a href="/AboutMe/Create" class="btn btn-success">Create</a>
 <div class="row">
     <div class="col-12">
@@ -14,28 +14,21 @@
             <thead>
                 <tr>
                     <th>Id</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th></th>
-                    <th></th>
+                    <th>Name</th>
+                    <th>Percentage</th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
-                @foreach (var aboutMe in Model)
+                @foreach (var skill in Model.Skills)
                 {
                     <tr>
-                        <td>@aboutMe.Id</td>
-                        <td>@aboutMe.FirstName</td>
-                        <td>@aboutMe.LastName</td>
+                        <td>@skill.Id</td>
+                        <td>@skill.Name</td>
+                        <td>@skill.Percentage</td>
                         <td>
-                            <a href="/Skills/@aboutMe.Id" class="btn btn-primary">Show skills</a>
-                        </td>
-                        <td>
-                            <a href="/AboutMe/Edit/@aboutMe.Id" class="btn btn-primary">Edit</a>
-                        </td>
-                        <td>
-                            <form method="post" action="/AboutMe/Delete/@aboutMe.Id">
+                            <a href="/Skills/Edit/@skill.Id" class="btn btn-primary">Edit</a>
+                            <form method="post" action="/Skills/Delete/@skill.Id">
                                 <button type="submit" class="btn btn-warning">Delete</button>
                             </form>
                         </td>
