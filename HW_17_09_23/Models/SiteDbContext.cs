@@ -10,5 +10,6 @@ namespace HW_17_09_23.Models
 
         public virtual DbSet<AboutMe> AboutMes { get; set; }
         public virtual DbSet<Skill> Skills { get; set; }
+        public virtual DbSet<SkillName> SkillNames { get; set; } // Додана таблиця SkillNames
     }
 }
