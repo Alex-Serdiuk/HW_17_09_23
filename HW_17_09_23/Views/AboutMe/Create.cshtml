@@ -1,0 +1,47 @@
+﻿@using HW_17_09_23.Models;
+@*
+*@
+@model AboutMe
+@{
+    Layout = "_AdminLayout";
+}
+
+<div class="row">
+	<div class="col-md-6">
+
+		<div class="card">
+			<div class="card-header">
+				<h1 class="card-title">Create AboutMe</h1>
+			</div>
+			<div class="card-body">
+				<form method="post" enctype="multipart/form-data">
+
+					<div class="mb-3">
+						@Html.LabelFor(m => m.FirstName, new {@class = "form-label"})
+						@Html.TextBoxFor(m => m.FirstName, new {@class = "form-control", placeholder = "Input First name..."})
+						@Html.ValidationMessageFor(m => m.FirstName)
+						@Html.LabelFor(m => m.LastName, new {@class = "form-label"})
+						@Html.TextBoxFor(m => m.LastName, new {@class = "form-control", placeholder = "Input First name..."})
+						@Html.ValidationMessageFor(m => m.LastName)
+					</div>
+
+					<button type="submit" class="btn btn-success">Save</button>
+					<a href="/AboutMe/Index" class="btn btn-outline-info">Return</a>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+@section HeadEnd {
+	<style>
+		h1 {
+			color: green;
+		}
+
+		.field-validation-error {
+			color: red;
+		}
+	</style>
+}
