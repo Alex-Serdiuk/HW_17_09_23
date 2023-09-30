@@ -4,7 +4,7 @@
     {
         public SkillName()
         {
-            Skills = new List<Skill>();
+            Skills = new HashSet<Skill>();
         }
 
         public int Id { get; set; }

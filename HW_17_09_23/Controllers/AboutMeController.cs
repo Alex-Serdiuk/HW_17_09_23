@@ -71,11 +71,12 @@ namespace HW_17_09_23.Controllers
 			return RedirectToAction("Index");
 		}
 
-        [HttpGet]
-        public ActionResult Skills(int id)
-        {
-            var aboutMe = _context.AboutMes.First(x => x.Id == id);
-            return View(aboutMe);
-        }
-    }
+		//[HttpGet]
+		//public ActionResult Skill(int id)
+		//{
+		//	ViewData["Title"] = "Skills list";
+		//	var aboutMe = _context.AboutMes.First(x => x.Id == id);
+		//	return View(aboutMe);
+		//}
+	}
 }
