@@ -25,7 +25,8 @@
                 {
                     <tr>
                         <td>@skill.Id</td>
-                        <td>@Model.SkillNames.FirstOrDefault(x=> x.Id == skill.SkillName.Id).Name</td>
+@*                         <td>@Model.SkillNames.FirstOrDefault(x=> x.Id == skill.SkillName.Id).Name</td>
+ *@                        <td>@skill.SkillName.Name</td>
                         <td>@skill.Percentage</td>
                         <td>
                             <a href="/Skill/Edit/@skill.Id" class="btn btn-primary">Edit</a>

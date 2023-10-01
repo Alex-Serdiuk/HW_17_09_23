@@ -5,7 +5,13 @@ namespace HW_17_09_23.Models
 {
 	public class SkillViewModel
 	{
-		[Display(Name = "AboutMe Name")]
+		public SkillViewModel()
+		{
+			SkillNameList = new List<SelectListItem>();
+		}
+
+		public int Id { get; set; }
+        [Display(Name = "AboutMe Name")]
 		public int AboutMeId { get; set; }
 
 		[Display(Name = "Skill Name")]

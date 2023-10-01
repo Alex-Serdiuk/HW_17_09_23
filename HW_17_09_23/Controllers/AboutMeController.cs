@@ -43,7 +43,8 @@ namespace HW_17_09_23.Controllers
 		[HttpGet]
 		public ActionResult Edit(int id)
 		{
-			var aboutMe = _context.AboutMes.First(x => x.Id == id);
+            ViewData["Title"] = "Edit About Me";
+            var aboutMe = _context.AboutMes.First(x => x.Id == id);
 			return View(aboutMe);
 		}
 

@@ -1,6 +1,7 @@
 ﻿using HW_17_09_23.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 
 namespace HW_17_09_23.Controllers
 {
@@ -27,10 +28,11 @@ namespace HW_17_09_23.Controllers
 			AboutMeViewModel aboutMeViewModel = new AboutMeViewModel
 			{
 				AboutMe = _context.AboutMes.First(x => x.Id == id),
-				Skills = _context.Skills.Where(x => x.AboutMe.Id == id).ToList(),
-				SkillNames = _context.SkillNames
-					.Where(x => skillNameIdsInSkills.Contains(x.Id))
-					.ToList()
+				Skills = _context.Skills.Include(s => s.SkillName).Where(x => x.AboutMe.Id == id).ToList(),
+			//Skills = _context.Skills.Where(x => x.AboutMe.Id == id).ToList(),
+			//SkillNames = _context.SkillNames
+			//		.Where(x => skillNameIdsInSkills.Contains(x.Id))
+			//		.ToList()
 			};
             
 			//aboutMe.Skills = _context.Skills.Where(x => x.AboutMe.Id == aboutMe.Id);
@@ -54,8 +56,8 @@ namespace HW_17_09_23.Controllers
 				Text = s.Name
 			});
 
-			// Додайте дані до ViewData
-			ViewData["SelectedSkillNameId"] = skillNames;
+            // Додайте дані до ViewData
+            ViewData["SelectedSkillNameId"] = skillNames;
 			var skillViewModel = new SkillViewModel();
 
 			if (id != null)
@@ -113,14 +115,56 @@ namespace HW_17_09_23.Controllers
         [HttpGet]
         public ActionResult Edit(int id)
         {
-            var skill = _context.Skills.First(x => x.Id == id);
-            return View(skill);
+            ViewData["Title"] = "Edit Skill";
+
+            // Отримайте існуючий Skill за його Id
+            var skill = _context.Skills.Include(s => s.SkillName).FirstOrDefault(s => s.Id == id);
+            if (skill == null)
+            {
+                return NotFound();
+            }
+
+            var selectedSkillNameId = skill.SkillName.Id;
+
+            // Отримайте всі SkillName для випадаючого списку
+            var skillNames = _context.SkillNames.Select(s => new SelectListItem
+            {
+                Value = s.Id.ToString(),
+                Text = s.Name
+            }).ToList();
+
+            // Якщо SkillName вже існує у списку, додайте його до випадаючого списку
+            if (skill.SkillName != null)
+            {
+                skillNames.Insert(0, new SelectListItem
+                {
+                    Value = skill.SkillName.Id.ToString(),
+                    Text = skill.SkillName.Name,
+                    Selected = true // Встановіть вибране значення для наявного SkillName
+                });
+            }
+
+            var skillViewModel = new SkillViewModel
+            {
+                Id = skill.Id.Value,
+                SelectedSkillNameId = skill.SkillName.Id,
+                Percentage = skill.Percentage,
+                SkillNameList = skillNames
+            };
+
+            return View(skillViewModel);
+
+            //var skill = _context.Skills.First(x => x.Id == id);
+            //return View(skill);
         }
 
         [HttpPost]
         public ActionResult Edit(int id, SkillViewModel model)
         {
-            var skill = _context.Skills.First(x => x.Id == id); ;
+            // Отримайте існуючий Skill за його Id
+            var skill = _context.Skills.Include(s => s.SkillName).FirstOrDefault(s => s.Id == id);
+            var aboutMeId = model.AboutMeId;
+            //var skill = _context.Skills.First(x => x.Id == id);
             if (!ModelState.IsValid)
             {
                 // Перевірка, чи обраний SkillName існує
@@ -136,7 +180,7 @@ namespace HW_17_09_23.Controllers
                         _context.SaveChanges();
                     }
                 }
-                return RedirectToAction("Index", new { id = model.AboutMeId });
+                return RedirectToAction("Index", new { id = skill.AboutMe.Id });
             }
             // Створення нового SkillName
             var newSkillName = new SkillName
@@ -150,7 +194,7 @@ namespace HW_17_09_23.Controllers
             skill.Percentage = model.Percentage;
             
             _context.SaveChanges();
-            return RedirectToAction("Index", new { id = model.AboutMeId });
+            return RedirectToAction("Index", new { id = skill.AboutMe.Id });
         }
     }
 }

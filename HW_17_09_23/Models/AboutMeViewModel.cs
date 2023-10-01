@@ -6,11 +6,11 @@
 		{
 			AboutMe = new AboutMe();
 			Skills = new List<Skill>();
-			SkillNames = new List<SkillName>();
+			//SkillNames = new List<SkillName>();
 		}
 
 		public AboutMe AboutMe { get; set; }
 		public List<Skill> Skills { get; set; }
-		public List<SkillName> SkillNames { get; set; }
+		//public List<SkillName> SkillNames { get; set; }
 	}
 }

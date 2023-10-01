@@ -18,10 +18,10 @@
 
 					<div class="mb-3">
 						@Html.HiddenFor(model => model.AboutMeId)
-						@Html.LabelFor(m => m.SelectedSkillNameId, new {@class = "form-label"})
-						@Html.DropDownListFor(model => model.SelectedSkillNameId, 
-							(IEnumerable<SelectListItem>)ViewBag.SkillNameList, 
-							"-- Select Skill Name --", 
+						@Html.LabelFor(model => model.SelectedSkillNameId, new { @class = "control-label" })
+						@Html.DropDownListFor(model => model.SelectedSkillNameId,
+							Model.SkillNameList,
+							"-- Select Skill Name --",
 							new { @class = "form-control" })
 						@Html.ValidationMessageFor(model => model.SelectedSkillNameId, "", new { @class = "text-danger" })
 						@Html.LabelFor(m => m.Percentage, new {@class = "form-label"})
