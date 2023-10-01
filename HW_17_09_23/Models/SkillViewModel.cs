@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System.ComponentModel.DataAnnotations;
 
 namespace HW_17_09_23.Models
 {
@@ -17,5 +18,7 @@ namespace HW_17_09_23.Models
 		[Required(ErrorMessage = "Percentage is required.")]
 		[Range(1, 100, ErrorMessage = "Percentage must be between 1 and 100.")]
 		public int Percentage { get; set; }
-	}
+
+        public List<SelectListItem> SkillNameList { get; set; }
+    }
 }

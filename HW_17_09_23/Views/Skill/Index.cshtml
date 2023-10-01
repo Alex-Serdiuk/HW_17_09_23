@@ -1,13 +1,13 @@
 ﻿@using HW_17_09_23.Models;
 @*
 *@
-@model AboutMe
+@model AboutMeViewModel
 @{
     Layout = "_AdminLayout";
 }
 
 @* <h1>List of Skills</h1> *@
-<a href="/Skill/Create/@Model.Id" class="btn btn-success">Create</a>
+<a href="/Skill/Create/@Model.AboutMe.Id" class="btn btn-success">Create</a>
 <div class="row">
     <div class="col-12">
         <table class="table table-hover">
@@ -17,6 +17,7 @@
                     <th>Name</th>
                     <th>Percentage</th>
                     <th></th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -24,10 +25,12 @@
                 {
                     <tr>
                         <td>@skill.Id</td>
-                        <td>@skill.SkillName.Name</td>
+                        <td>@Model.SkillNames.FirstOrDefault(x=> x.Id == skill.SkillName.Id).Name</td>
                         <td>@skill.Percentage</td>
                         <td>
                             <a href="/Skill/Edit/@skill.Id" class="btn btn-primary">Edit</a>
+                        </td>
+                        <td>
                             <form method="post" action="/Skill/Delete/@skill.Id">
                                 <button type="submit" class="btn btn-warning">Delete</button>
                             </form>

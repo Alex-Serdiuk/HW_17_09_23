@@ -17,9 +17,24 @@ namespace HW_17_09_23.Controllers
         public IActionResult Index(int id)
         {
             ViewData["Title"] = "Skills list";
-            var aboutMe = _context.AboutMes.First(x => x.Id == id);
+			// Используйте Distinct(), чтобы избежать дублирования SkillName
+			var skillNameIdsInSkills = _context.Skills
+				.Where(x => x.AboutMe.Id == id)
+				.Select(x => x.SkillName.Id)
+				.Distinct()
+				.ToList();
+
+			AboutMeViewModel aboutMeViewModel = new AboutMeViewModel
+			{
+				AboutMe = _context.AboutMes.First(x => x.Id == id),
+				Skills = _context.Skills.Where(x => x.AboutMe.Id == id).ToList(),
+				SkillNames = _context.SkillNames
+					.Where(x => skillNameIdsInSkills.Contains(x.Id))
+					.ToList()
+			};
+            
 			//aboutMe.Skills = _context.Skills.Where(x => x.AboutMe.Id == aboutMe.Id);
-            return View(aboutMe);
+            return View(aboutMeViewModel);
         }
         //public IActionResult Index()
         //{
@@ -100,6 +115,42 @@ namespace HW_17_09_23.Controllers
         {
             var skill = _context.Skills.First(x => x.Id == id);
             return View(skill);
+        }
+
+        [HttpPost]
+        public ActionResult Edit(int id, SkillViewModel model)
+        {
+            var skill = _context.Skills.First(x => x.Id == id); ;
+            if (!ModelState.IsValid)
+            {
+                // Перевірка, чи обраний SkillName існує
+                if (model.SelectedSkillNameId != null)
+                {
+                    // Вибір існуючого SkillName
+                    var skillName = _context.SkillNames.Find(model.SelectedSkillNameId);
+                    if (skillName != null)
+                    {
+                        
+                        skill.SkillName = skillName;
+                        skill.Percentage = model.Percentage;
+                        _context.SaveChanges();
+                    }
+                }
+                return RedirectToAction("Index", new { id = model.AboutMeId });
+            }
+            // Створення нового SkillName
+            var newSkillName = new SkillName
+            {
+                Name = model.NewSkillName
+            };
+            _context.SkillNames.Add(newSkillName);
+            _context.SaveChanges();
+
+            skill.SkillName = newSkillName;
+            skill.Percentage = model.Percentage;
+            
+            _context.SaveChanges();
+            return RedirectToAction("Index", new { id = model.AboutMeId });
         }
     }
 }
