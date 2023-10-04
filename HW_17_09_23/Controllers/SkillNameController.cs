@@ -6,12 +6,12 @@ using System.Text.RegularExpressions;
 
 namespace HW_17_09_23.Controllers
 {
-    public class AboutMeController : Controller
+    public class SkillNameController : Controller
     {
 		private readonly SiteDbContext _context;
 		private readonly IWebHostEnvironment _environment;
 
-		public AboutMeController(SiteDbContext context, IWebHostEnvironment environment)
+		public SkillNameController(SiteDbContext context, IWebHostEnvironment environment)
 		{
 			_context = context;
 			_environment = environment;
@@ -19,34 +19,35 @@ namespace HW_17_09_23.Controllers
 
 		public IActionResult Index()
         {
-			ViewData["Title"] = "AboutMe list";
-			return View(_context.AboutMes.Include(x => x.Image).ToList());
+			ViewData["Title"] = "SkillNames list";
+			return View(_context.SkillNames.Include(x => x.Image).ToList());
         }
 
 		[HttpGet]
 		public ActionResult Create()
 		{
-			ViewData["Title"] = "Create About Me";
-			return View(new AboutMe());
+			ViewData["Title"] = "Create SkillName";
+			return View(new SkillName());
 		}
 
 		[HttpPost]
-		public async Task<ActionResult> Create([FromForm] AboutMe aboutMe, IFormFile? image)
+		public async Task<ActionResult> Create([FromForm] SkillName skillName, IFormFile? image)
 		{
 			if (!ModelState.IsValid)
 			{
-				return View(aboutMe);
+				return View(skillName);
 			}
 
 			if (image != null)
 			{
-				aboutMe.Image = await Upload(image);
+				skillName.Image = await Upload(image);
 			}
 
-			_context.AboutMes.Add(aboutMe);
-			_context.SaveChanges();
+			_context.SkillNames.Add(skillName);
+			await _context.SaveChangesAsync();
 
 			return RedirectToAction("Index");
+
 		}
 
 		[HttpPost]
@@ -80,55 +81,47 @@ namespace HW_17_09_23.Controllers
 		[HttpGet]
 		public ActionResult Edit(int id)
 		{
-            ViewData["Title"] = "Edit About Me";
-            var aboutMe = _context.AboutMes.First(x => x.Id == id);
-			return View(aboutMe);
+			ViewData["Title"] = "Edit SkillName";
+			var skillName = _context.SkillNames.Include(x => x.Image).First(x => x.Id == id);
+			return View(skillName);
 		}
 
 		[HttpPost]
-		public async Task<ActionResult> Edit(int id, [FromForm] AboutMeForm form)
+		public async Task<ActionResult> Edit(int id, [FromForm] SkillNameForm form)
 		{
 			if (!ModelState.IsValid)
 			{
 				return View(form);
 			}
 
-			var aboutMe = await _context.AboutMes.Include(x => x.Image).FirstAsync(x => x.Id == id);
-			aboutMe.FirstName = form.FirstName;
-			aboutMe.LastName = form.LastName;
+			var skillName = await _context.SkillNames.Include(x => x.Image).FirstAsync(x => x.Id == id);
+			skillName.Name = form.Name;
 
 			if (form.Image != null)
 			{
-				if (aboutMe.Image != null)
+				if (skillName.Image != null)
 				{
 					//delete old
-					var localFilename = Path.Combine(_environment.WebRootPath, "uploads", aboutMe.Image.FileName);
+					var localFilename = Path.Combine(_environment.WebRootPath, "uploads", skillName.Image.FileName);
 					System.IO.File.Delete(localFilename);
-					_context.Images.Remove(aboutMe.Image);
+					_context.Images.Remove(skillName.Image);
 				}
 
-				aboutMe.Image = await Upload(form.Image);
+				skillName.Image = await Upload(form.Image);
 			}
 
-			_context.SaveChanges();
+
+			await _context.SaveChangesAsync();
 			return RedirectToAction("Index");
 		}
 
 		[HttpPost]
 		public ActionResult Delete(int id)
 		{
-			var group = _context.AboutMes.First(x => x.Id == id);
-			_context.AboutMes.Remove(group);
+			var group = _context.SkillNames.First(x => x.Id == id);
+			_context.SkillNames.Remove(group);
 			_context.SaveChanges();
 			return RedirectToAction("Index");
 		}
-
-		//[HttpGet]
-		//public ActionResult Skill(int id)
-		//{
-		//	ViewData["Title"] = "Skills list";
-		//	var aboutMe = _context.AboutMes.First(x => x.Id == id);
-		//	return View(aboutMe);
-		//}
 	}
 }

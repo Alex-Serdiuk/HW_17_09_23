@@ -1,7 +1,7 @@
-﻿@using HW_17_09_23.Models;
+﻿@using HW_17_09_23.Models.Forms;
 @*
 *@
-@model SkillViewModel
+@model SkillForm
 @{
     Layout = "_AdminLayout";
 }
@@ -27,11 +27,11 @@
 						@Html.LabelFor(m => m.Percentage, new {@class = "form-label"})
 						@Html.TextBoxFor(m => m.Percentage, new {@class = "form-control", placeholder = "Input Percentage..."})
 						@Html.ValidationMessageFor(model => model.Percentage, "", new { @class = "text-danger" })
-						@Html.LabelFor(m => m.NewSkillName, new {@class = "form-label"})
+						@* @Html.LabelFor(m => m.NewSkillName, new {@class = "form-label"})
 						@Html.TextBoxFor(m => m.NewSkillName, new {@class = "form-control", placeholder = "Input First name..."})
-						@Html.ValidationMessageFor(model => model.NewSkillName, "", new { @class = "text-danger" })
+						@Html.ValidationMessageFor(model => model.NewSkillName, "", new { @class = "text-danger" }) *@
 					</div>
-
+					<a class="btn btn-success" href="/SkillName/Index">Add/Change Skill name</a>
 					<button type="submit" class="btn btn-success">Save</button>
 					<a href="/AboutMe/Index" class="btn btn-outline-info">Return</a>
 				</form>

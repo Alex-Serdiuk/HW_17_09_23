@@ -1,4 +1,5 @@
 ﻿using HW_17_09_23.Models;
+using HW_17_09_23.Models.Forms;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -28,14 +29,14 @@ namespace HW_17_09_23.Controllers
 			AboutMeViewModel aboutMeViewModel = new AboutMeViewModel
 			{
 				AboutMe = _context.AboutMes.First(x => x.Id == id),
-				Skills = _context.Skills.Include(s => s.SkillName).Where(x => x.AboutMe.Id == id).ToList(),
-			//Skills = _context.Skills.Where(x => x.AboutMe.Id == id).ToList(),
-			//SkillNames = _context.SkillNames
-			//		.Where(x => skillNameIdsInSkills.Contains(x.Id))
-			//		.ToList()
+				Skills = _context.Skills
+                .Include(s => s.SkillName)
+                .ThenInclude(sn => sn.Image)
+                .Where(x => x.AboutMe.Id == id)
+                .ToList()
 			};
             
-			//aboutMe.Skills = _context.Skills.Where(x => x.AboutMe.Id == aboutMe.Id);
+			
             return View(aboutMeViewModel);
         }
         //public IActionResult Index()
@@ -58,7 +59,7 @@ namespace HW_17_09_23.Controllers
 
             // Додайте дані до ViewData
             ViewData["SelectedSkillNameId"] = skillNames;
-			var skillViewModel = new SkillViewModel();
+			var skillViewModel = new SkillForm();
 
 			if (id != null)
 			{
@@ -69,46 +70,64 @@ namespace HW_17_09_23.Controllers
 		}
 
         [HttpPost]
-        public ActionResult Create(SkillViewModel model)
+        public ActionResult Create([FromForm] SkillForm model)
         {
             if (!ModelState.IsValid)
             {
-                // Перевірка, чи обраний SkillName існує
-                if (model.SelectedSkillNameId != null)
-                {
-					// Вибір існуючого SkillName
-					var skillName = _context.SkillNames.Find(model.SelectedSkillNameId);
-                    if (skillName != null)
-                    {
-						var skill = new Skill
-						{
-                            AboutMe = _context.AboutMes.First(x => x.Id == model.AboutMeId),
-							SkillName = skillName,
-							Percentage = model.Percentage
-						};
-						_context.Skills.Add(skill);
-						_context.SaveChanges();
-					}
-				}
+    //            // Перевірка, чи обраний SkillName існує
+    //            if (model.SelectedSkillNameId != null)
+    //            {
+				//	// Вибір існуючого SkillName
+				//	var skillName = _context.SkillNames.Find(model.SelectedSkillNameId);
+    //                if (skillName != null)
+    //                {
+				//		var skill = new Skill
+				//		{
+    //                        AboutMe = _context.AboutMes.First(x => x.Id == model.AboutMeId),
+				//			SkillName = skillName,
+				//			Percentage = model.Percentage
+				//		};
+				//		_context.Skills.Add(skill);
+				//		_context.SaveChanges();
+				//	}
+				//}
 				return RedirectToAction("Index", new { id = model.AboutMeId });
 			}
-			// Створення нового SkillName
-			var newSkillName = new SkillName
-			{
-				Name = model.NewSkillName
-			};
-			_context.SkillNames.Add(newSkillName);
-            _context.SaveChanges();
+			//// Створення нового SkillName
+			//var newSkillName = new SkillName
+			//{
+			//	Name = model.NewSkillName
+			//};
+			//_context.SkillNames.Add(newSkillName);
+			//         _context.SaveChanges();
 
-			var newSkill = new Skill
-			{
-				AboutMe = _context.AboutMes.First(x => x.Id == model.AboutMeId),
-				SkillName = newSkillName,
-				Percentage = model.Percentage
-			};
+			//var newSkill = new Skill
+			//{
+			//	AboutMe = _context.AboutMes.First(x => x.Id == model.AboutMeId),
+			//	SkillName = newSkillName,
+			//	Percentage = model.Percentage
+			//};
 
-			_context.Skills.Add(newSkill);
-			_context.SaveChanges();
+			//_context.Skills.Add(newSkill);
+			//_context.SaveChanges();
+
+			// Перевірка, чи обраний SkillName існує
+			if (model.SelectedSkillNameId != null)
+			{
+				// Вибір існуючого SkillName
+				var skillName = _context.SkillNames.Find(model.SelectedSkillNameId);
+				if (skillName != null)
+				{
+					var skill = new Skill
+					{
+						AboutMe = _context.AboutMes.First(x => x.Id == model.AboutMeId),
+						SkillName = skillName,
+						Percentage = model.Percentage
+					};
+					_context.Skills.Add(skill);
+					_context.SaveChanges();
+				}
+			}
 			return RedirectToAction("Index", new { id = model.AboutMeId });
 		}
 
@@ -117,9 +136,13 @@ namespace HW_17_09_23.Controllers
         {
             ViewData["Title"] = "Edit Skill";
 
-            // Отримайте існуючий Skill за його Id
-            var skill = _context.Skills.Include(s => s.SkillName).FirstOrDefault(s => s.Id == id);
-            if (skill == null)
+			// Отримайте існуючий Skill за його Id
+			//var skill = _context.Skills.Include(s => s.SkillName).FirstOrDefault(s => s.Id == id);
+			var skill = _context.Skills
+	                    .Include(s => s.SkillName)
+	                    .Include(s => s.AboutMe)
+	                    .FirstOrDefault(s => s.Id == id);
+			if (skill == null)
             {
                 return NotFound();
             }
@@ -144,9 +167,10 @@ namespace HW_17_09_23.Controllers
                 });
             }
 
-            var skillViewModel = new SkillViewModel
+            var skillViewModel = new SkillForm
             {
-                Id = skill.Id.Value,
+                AboutMeId =skill.AboutMe.Id,
+                //Id = skill.Id.Value,
                 SelectedSkillNameId = skill.SkillName.Id,
                 Percentage = skill.Percentage,
                 SkillNameList = skillNames
@@ -159,11 +183,10 @@ namespace HW_17_09_23.Controllers
         }
 
         [HttpPost]
-        public ActionResult Edit(int id, SkillViewModel model)
+        public ActionResult Edit(int id, SkillForm model)
         {
             // Отримайте існуючий Skill за його Id
             var skill = _context.Skills.Include(s => s.SkillName).FirstOrDefault(s => s.Id == id);
-            var aboutMeId = model.AboutMeId;
             //var skill = _context.Skills.First(x => x.Id == id);
             if (!ModelState.IsValid)
             {
@@ -180,21 +203,31 @@ namespace HW_17_09_23.Controllers
                         _context.SaveChanges();
                     }
                 }
-                return RedirectToAction("Index", new { id = skill.AboutMe.Id });
+                return RedirectToAction("Index", new { id = model.AboutMeId });
             }
-            // Створення нового SkillName
-            var newSkillName = new SkillName
-            {
-                Name = model.NewSkillName
-            };
-            _context.SkillNames.Add(newSkillName);
-            _context.SaveChanges();
+            //// Створення нового SkillName
+            //var newSkillName = new SkillName
+            //{
+            //    Name = model.NewSkillName
+            //};
+            //_context.SkillNames.Add(newSkillName);
+            //_context.SaveChanges();
 
-            skill.SkillName = newSkillName;
-            skill.Percentage = model.Percentage;
+            //skill.SkillName = newSkillName;
+            //skill.Percentage = model.Percentage;
             
-            _context.SaveChanges();
-            return RedirectToAction("Index", new { id = skill.AboutMe.Id });
+            //_context.SaveChanges();
+            return RedirectToAction("Index", new { id = model.AboutMeId });
         }
-    }
+
+		[HttpPost]
+		public ActionResult Delete(int id)
+		{
+			var skill = _context.Skills.Include(s => s.AboutMe).First(x => x.Id == id);
+            var AboutMeId = skill.AboutMe.Id;
+			_context.Skills.Remove(skill);
+			_context.SaveChanges();
+			return RedirectToAction("Index", new { id = AboutMeId });
+		}
+	}
 }

@@ -1,7 +1,7 @@
 ﻿@using HW_17_09_23.Models;
 @*
 *@
-@model AboutMe
+@model SkillName
 @{
     Layout = "_AdminLayout";
 }
@@ -11,23 +11,27 @@
 
 		<div class="card">
 			<div class="card-header">
-				<h1 class="card-title">Create AboutMe</h1>
+				<h1 class="card-title">Edit Skill</h1>
 			</div>
 			<div class="card-body">
 				<form method="post" enctype="multipart/form-data">
 
 					<div class="mb-3">
-						@Html.LabelFor(m => m.FirstName, new {@class = "form-label"})
-						@Html.TextBoxFor(m => m.FirstName, new {@class = "form-control", placeholder = "Input First name..."})
-						@Html.ValidationMessageFor(m => m.FirstName)
-						@Html.LabelFor(m => m.LastName, new {@class = "form-label"})
-						@Html.TextBoxFor(m => m.LastName, new {@class = "form-control", placeholder = "Input First name..."})
-						@Html.ValidationMessageFor(m => m.LastName)
+						@Html.LabelFor(m => m.Name, new {@class = "form-label"})
+						@Html.TextBoxFor(m => m.Name, new {@class = "form-control", placeholder = "Input name..."})
+						@Html.ValidationMessageFor(m => m.Name)
+					</div>
+
+					<div class="mb-3">
+						@if (Model.Image != null)
+						{
+							<img class="img-thumbnail" src="@Model.Image.Src()" />
+						}
 					</div>
 
 					<div class="mb-3">
 						@Html.LabelFor(m => m.Image, new {@class = "form-label"})
-						@Html.TextBoxFor(m => m.Image, new {@class = "form-control", type="file", placeholder = "Upload image..."})
+						@Html.TextBoxFor(m => m.Image, new {@class = "form-control", type="file", accept=".jpg,.png", placeholder = "Upload image..."})
 						@Html.ValidationMessageFor(m => m.Image)
 					</div>
 

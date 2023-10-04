@@ -25,6 +25,19 @@
 						@Html.ValidationMessageFor(m => m.LastName)
 					</div>
 
+					<div class="mb-3">
+						@if (Model.Image != null)
+						{
+							<img class="img-thumbnail" src="@Model.Image.Src()" />
+						}
+					</div>
+
+					<div class="mb-3">
+						@Html.LabelFor(m => m.Image, new {@class = "form-label"})
+						@Html.TextBoxFor(m => m.Image, new {@class = "form-control", type="file", accept=".jpg,.png", placeholder = "Upload image..."})
+						@Html.ValidationMessageFor(m => m.Image)
+					</div>
+
 					<button type="submit" class="btn btn-success">Save</button>
 					<a href="/AboutMe/Index" class="btn btn-outline-info">Return</a>
 				</form>

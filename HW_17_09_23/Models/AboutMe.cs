@@ -13,5 +13,7 @@
         public string LastName { get; set; }
         public string PhotoPath { get; set; }
         public virtual ICollection<Skill> Skills { get; set; }
+
+        public virtual ImageFile? Image { get; set; }
     }
 }
