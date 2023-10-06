@@ -1,0 +1,83 @@
+﻿@using HW_17_09_23.Models;
+@*
+*@
+@model AboutMeViewModel
+@{
+    Layout = "_AdminLayout";
+}
+
+
+@* <a href="/Skill/Create/@Model.AboutMe.Id" class="btn btn-success">Create</a> *@
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <h1>Profile</h1>
+            @if (Model.AboutMe.Image != null)
+            {
+                <img class="table-image img-thumbnail" src="@Model.AboutMe.Image.Src()" />
+            }
+            <p>First name: @Model.AboutMe.FirstName</p>
+            <p>Last name: @Model.AboutMe.LastName</p>
+            <p>Email: @Model.AboutMe.Email</p>
+            <p>Phone number: @Model.AboutMe.Phone</p>
+            <p>About me: @Model.AboutMe.Info</p>
+            
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Image</th>
+                        <th>Name</th>
+                        <th>Percentage</th>
+                        @* <th></th>
+                        <th></th> *@
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var skill in Model.Skills)
+                    {
+                        <tr>
+                            <td>@skill.Id</td>
+                            <td>
+                                @if (skill.SkillName.Image != null)
+                                {
+                                    <img class="table-image img-thumbnail" src="@skill.SkillName.Image.Src()" />
+                                }
+                            </td>
+                            <td>@skill.SkillName.Name</td>
+                            <td>@skill.Percentage</td>
+                            @*  <td>
+                        <a href="/Skill/Edit/@skill.Id" class="btn btn-primary">Edit</a>
+                        </td>
+                        <td>
+                        <form method="post" action="/Skill/Delete/@skill.Id">
+                        <button type="submit" class="btn btn-warning">Delete</button>
+                        </form>
+                        </td> *@
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+@section HeadEnd {
+    <style>
+        h1 {
+            color: green;
+        }
+
+        img.table-image {
+            max-width: 150px;
+        }
+    </style>
+}
+
+@section BodyEnd {
+    <script>
+        //alert("Hello")
+    </script>
+} 

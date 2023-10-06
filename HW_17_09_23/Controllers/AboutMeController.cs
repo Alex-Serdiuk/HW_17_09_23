@@ -6,8 +6,8 @@ using System.Text.RegularExpressions;
 
 namespace HW_17_09_23.Controllers
 {
-    public class AboutMeController : Controller
-    {
+	public class AboutMeController : Controller
+	{
 		private readonly SiteDbContext _context;
 		private readonly IWebHostEnvironment _environment;
 
@@ -18,10 +18,10 @@ namespace HW_17_09_23.Controllers
 		}
 
 		public IActionResult Index()
-        {
+		{
 			ViewData["Title"] = "AboutMe list";
 			return View(_context.AboutMes.Include(x => x.Image).ToList());
-        }
+		}
 
 		[HttpGet]
 		public ActionResult Create()
@@ -80,8 +80,8 @@ namespace HW_17_09_23.Controllers
 		[HttpGet]
 		public ActionResult Edit(int id)
 		{
-            ViewData["Title"] = "Edit About Me";
-            var aboutMe = _context.AboutMes.First(x => x.Id == id);
+			ViewData["Title"] = "Edit About Me";
+			var aboutMe = _context.AboutMes.Include(x => x.Image).First(x => x.Id == id);
 			return View(aboutMe);
 		}
 
@@ -96,6 +96,9 @@ namespace HW_17_09_23.Controllers
 			var aboutMe = await _context.AboutMes.Include(x => x.Image).FirstAsync(x => x.Id == id);
 			aboutMe.FirstName = form.FirstName;
 			aboutMe.LastName = form.LastName;
+			aboutMe.Email = form.Email;
+			aboutMe.Phone = form.Phone;
+			aboutMe.Info = form.Info;
 
 			if (form.Image != null)
 			{
@@ -130,5 +133,24 @@ namespace HW_17_09_23.Controllers
 		//	var aboutMe = _context.AboutMes.First(x => x.Id == id);
 		//	return View(aboutMe);
 		//}
+
+		[HttpGet]
+		public IActionResult Profile(int id)
+		{
+			ViewData["Title"] = "Skills list";
+
+			AboutMeViewModel aboutMeViewModel = new AboutMeViewModel
+			{
+				AboutMe = _context.AboutMes.Include(x => x.Image).First(x => x.Id == id),
+				Skills = _context.Skills
+				.Include(s => s.SkillName)
+				.ThenInclude(sn => sn.Image)
+				.Where(x => x.AboutMe.Id == id)
+				.ToList()
+			};
+
+
+			return View(aboutMeViewModel);
+		}
 	}
 }

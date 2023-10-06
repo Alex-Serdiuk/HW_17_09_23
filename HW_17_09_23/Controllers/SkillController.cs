@@ -19,12 +19,6 @@ namespace HW_17_09_23.Controllers
         public IActionResult Index(int id)
         {
             ViewData["Title"] = "Skills list";
-			// Используйте Distinct(), чтобы избежать дублирования SkillName
-			var skillNameIdsInSkills = _context.Skills
-				.Where(x => x.AboutMe.Id == id)
-				.Select(x => x.SkillName.Id)
-				.Distinct()
-				.ToList();
 
 			AboutMeViewModel aboutMeViewModel = new AboutMeViewModel
 			{

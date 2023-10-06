@@ -21,8 +21,18 @@
 						@Html.TextBoxFor(m => m.FirstName, new {@class = "form-control", placeholder = "Input First name..."})
 						@Html.ValidationMessageFor(m => m.FirstName)
 						@Html.LabelFor(m => m.LastName, new {@class = "form-label"})
-						@Html.TextBoxFor(m => m.LastName, new {@class = "form-control", placeholder = "Input First name..."})
+						@Html.TextBoxFor(m => m.LastName, new {@class = "form-control", placeholder = "Input Last name..."})
 						@Html.ValidationMessageFor(m => m.LastName)
+						@Html.ValidationMessageFor(m => m.Email)
+						@Html.LabelFor(m => m.Email, new {@class = "form-label"})
+						@Html.TextBoxFor(m => m.Email, new {@class = "form-control", placeholder = "Input Email..."})
+						@Html.ValidationMessageFor(m => m.Email)
+						@Html.LabelFor(m => m.Phone, new {@class = "form-label"})
+						@Html.TextBoxFor(m => m.Phone, new {@class = "form-control", placeholder = "Input Phone Number..."})
+						@Html.ValidationMessageFor(m => m.Phone)
+						@Html.LabelFor(m => m.Info, new {@class = "form-label"})
+						@Html.TextBoxFor(m => m.Info, new {@class = "form-control", placeholder = "Input Info..."})
+						@Html.ValidationMessageFor(m => m.Info)
 					</div>
 
 					<div class="mb-3">
