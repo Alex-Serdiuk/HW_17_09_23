@@ -15,7 +15,8 @@ namespace HW_17_09_23.Models.Forms
         [Display(Name = "About me")]
         public string? Info { get; set; }
 
-        [Required(ErrorMessage = "Зображення обов'язкове")]
-		public IFormFile Image { get; set; }
+        //[Required(ErrorMessage = "Зображення обов'язкове")]
+        [Display(Name = "Image")]
+        public IFormFile? Image { get; set; }
 	}
 }
