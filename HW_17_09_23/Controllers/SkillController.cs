@@ -184,19 +184,7 @@ namespace HW_17_09_23.Controllers
             //var skill = _context.Skills.First(x => x.Id == id);
             if (!ModelState.IsValid)
             {
-                // Перевірка, чи обраний SkillName існує
-                if (model.SelectedSkillNameId != null)
-                {
-                    // Вибір існуючого SkillName
-                    var skillName = _context.SkillNames.Find(model.SelectedSkillNameId);
-                    if (skillName != null)
-                    {
-                        
-                        skill.SkillName = skillName;
-                        skill.Percentage = model.Percentage;
-                        _context.SaveChanges();
-                    }
-                }
+               
                 return RedirectToAction("Index", new { id = model.AboutMeId });
             }
             //// Створення нового SkillName
@@ -209,8 +197,22 @@ namespace HW_17_09_23.Controllers
 
             //skill.SkillName = newSkillName;
             //skill.Percentage = model.Percentage;
-            
+
             //_context.SaveChanges();
+
+            // Перевірка, чи обраний SkillName існує
+            if (model.SelectedSkillNameId != null)
+            {
+                // Вибір існуючого SkillName
+                var skillName = _context.SkillNames.Find(model.SelectedSkillNameId);
+                if (skillName != null)
+                {
+
+                    skill.SkillName = skillName;
+                    skill.Percentage = model.Percentage;
+                    _context.SaveChanges();
+                }
+            }
             return RedirectToAction("Index", new { id = model.AboutMeId });
         }
 
