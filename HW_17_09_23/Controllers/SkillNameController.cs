@@ -1,11 +1,13 @@
 ﻿using HW_17_09_23.Models;
 using HW_17_09_23.Models.Forms;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Text.RegularExpressions;
 
 namespace HW_17_09_23.Controllers
 {
+    [Authorize]
     public class SkillNameController : Controller
     {
 		private readonly SiteDbContext _context;
@@ -20,7 +22,13 @@ namespace HW_17_09_23.Controllers
 		public IActionResult Index()
         {
 			ViewData["Title"] = "SkillNames list";
-			return View(_context.SkillNames.Include(x => x.Image).ToList());
+			var returnUrl = HttpContext.Request.Headers["Referer"].ToString();
+			HttpContext.Response.Cookies.Append("editSkill-return-url", returnUrl, new CookieOptions
+			{
+				Expires = new DateTimeOffset(2038, 1, 1, 0, 0, 0, TimeSpan.FromHours(0))
+			});
+			@ViewData["Referer"] = HttpContext.Request.Cookies["editSkill-return-url"]?.ToString();
+            return View(_context.SkillNames.Include(x => x.Image).ToList());
         }
 
 		[HttpGet]

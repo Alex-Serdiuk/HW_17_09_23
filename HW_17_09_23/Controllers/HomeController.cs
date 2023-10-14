@@ -41,23 +41,23 @@ public class HomeController : Controller
         Skills = allSkills,
     };
 
-    public async Task<IActionResult> Skills(string searchText)
-    {
-        List<Skill> filteredSkills;
+    //public async Task<IActionResult> Skills(string searchText)
+    //{
+    //    List<Skill> filteredSkills;
 
-        if (string.IsNullOrWhiteSpace(searchText))
-        {
-            // Повернути всі навички, якщо пошуковий текст пустий
-            filteredSkills = allSkills;
-        }
-        else
-        {
-            // Фільтрувати навички за введеним текстом
-            filteredSkills = allSkills
-                .Where(skill => skill.Name.Contains(searchText, StringComparison.OrdinalIgnoreCase))
-                .ToList();
-        }
-        model.Skills = filteredSkills;
-        return View(model);
-    }
+    //    if (string.IsNullOrWhiteSpace(searchText))
+    //    {
+    //        // Повернути всі навички, якщо пошуковий текст пустий
+    //        filteredSkills = allSkills;
+    //    }
+    //    else
+    //    {
+    //        // Фільтрувати навички за введеним текстом
+    //        filteredSkills = allSkills
+    //            .Where(skill => skill.Name.Contains(searchText, StringComparison.OrdinalIgnoreCase))
+    //            .ToList();
+    //    }
+    //    model.Skills = filteredSkills;
+    //    return View(model);
+    //}
 }

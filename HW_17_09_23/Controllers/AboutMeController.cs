@@ -1,11 +1,13 @@
 ﻿using HW_17_09_23.Models;
 using HW_17_09_23.Models.Forms;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Text.RegularExpressions;
 
 namespace HW_17_09_23.Controllers
 {
+	
 	public class AboutMeController : Controller
 	{
 		private readonly SiteDbContext _context;
@@ -23,14 +25,16 @@ namespace HW_17_09_23.Controllers
 			return View(_context.AboutMes.Include(x => x.Image).ToList());
 		}
 
-		[HttpGet]
+        [Authorize]
+        [HttpGet]
 		public ActionResult Create()
 		{
 			ViewData["Title"] = "Create About Me";
 			return View(new AboutMe());
 		}
 
-		[HttpPost]
+        [Authorize]
+        [HttpPost]
 		public async Task<ActionResult> Create([FromForm] AboutMe aboutMe, IFormFile? image)
 		{
 			if (!ModelState.IsValid)
@@ -49,7 +53,8 @@ namespace HW_17_09_23.Controllers
 			return RedirectToAction("Index");
 		}
 
-		[HttpPost]
+        [Authorize]
+        [HttpPost]
 		public async Task<ImageFile> Upload(IFormFile file)
 		{
 			// 6B29FC40-CA47-1067-b31d-00dd010662da         ".png"
@@ -77,7 +82,8 @@ namespace HW_17_09_23.Controllers
 			return dbFile;
 		}
 
-		[HttpGet]
+        [Authorize]
+        [HttpGet]
 		public ActionResult Edit(int id)
 		{
 			ViewData["Title"] = "Edit About Me";
@@ -85,7 +91,8 @@ namespace HW_17_09_23.Controllers
 			return View(aboutMe);
 		}
 
-		[HttpPost]
+        [Authorize]
+        [HttpPost]
 		public async Task<ActionResult> Edit(int id, [FromForm] AboutMeForm form)
 		{
 			if (!ModelState.IsValid)
@@ -117,7 +124,8 @@ namespace HW_17_09_23.Controllers
 			return RedirectToAction("Index");
 		}
 
-		[HttpPost]
+        [Authorize]
+        [HttpPost]
 		public ActionResult Delete(int id)
 		{
 			var group = _context.AboutMes.First(x => x.Id == id);

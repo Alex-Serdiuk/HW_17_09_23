@@ -1,11 +1,13 @@
 ﻿using HW_17_09_23.Models;
 using HW_17_09_23.Models.Forms;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace HW_17_09_23.Controllers
 {
+    [Authorize]
     public class SkillController : Controller
     {
         private readonly SiteDbContext _context;
@@ -33,19 +35,36 @@ namespace HW_17_09_23.Controllers
 			
             return View(aboutMeViewModel);
         }
-        //public IActionResult Index()
-        //{
-           
-        //    return View();
-        //}
 
-        [HttpGet]
+		public ActionResult ReturnUrl()
+		{
+			var returnUrl = HttpContext.Request.Headers["Referer"].ToString();
+
+			HttpContext.Response.Cookies.Append("editSkill-return-url", returnUrl, new CookieOptions
+			{
+				Expires = new DateTimeOffset(2038, 1, 1, 0, 0, 0, TimeSpan.FromHours(0))
+			});
+
+			return RedirectToAction("Index", "Skill");
+		}
+		//public IActionResult Index()
+		//{
+
+		//    return View();
+		//}
+
+		[HttpGet]
         public ActionResult Create(int id)
         {
 			ViewData["Title"] = "Create Skill";
-
-			// Отримайте дані для випадаючого списку SkillName з бази даних
-			var skillNames = _context.SkillNames.Select(s => new SelectListItem
+			//var returnUrl = HttpContext.Request.Headers["Referer"].ToString();
+			//HttpContext.Response.Cookies.Append("editSkill-return-url", returnUrl, new CookieOptions
+			//{
+			//	Expires = new DateTimeOffset(2038, 1, 1, 0, 0, 0, TimeSpan.FromHours(0))
+			//});
+			ViewData["Referer"] = HttpContext.Request.Cookies["editSkill-return-url"]?.ToString();
+            // Отримайте дані для випадаючого списку SkillName з бази даних
+            var skillNames = _context.SkillNames.Select(s => new SelectListItem
 			{
 				Value = s.Id.ToString(),
 				Text = s.Name
@@ -122,17 +141,34 @@ namespace HW_17_09_23.Controllers
 					_context.SaveChanges();
 				}
 			}
-			return RedirectToAction("Index", new { id = model.AboutMeId });
+
+            var returnUrl = HttpContext.Request.Cookies["editSkill-return-url"];
+            if (returnUrl != null)
+            {
+                HttpContext.Response.Cookies.Append("editSkill-return-url", "", new CookieOptions
+                {
+                    Expires = DateTime.Now.AddDays(-1)
+                });
+                //return Redirect(returnUrl.ToString());
+            }
+
+            return RedirectToAction("Index", new { id = model.AboutMeId });
 		}
 
         [HttpGet]
         public ActionResult Edit(int id)
         {
             ViewData["Title"] = "Edit Skill";
-
-			// Отримайте існуючий Skill за його Id
-			//var skill = _context.Skills.Include(s => s.SkillName).FirstOrDefault(s => s.Id == id);
-			var skill = _context.Skills
+			//var returnUrl = HttpContext.Request.Headers["Referer"].ToString();
+			//HttpContext.Response.Cookies.Append("editSkill-return-url", returnUrl, new CookieOptions
+			//{
+			//	Expires = new DateTimeOffset(2038, 1, 1, 0, 0, 0, TimeSpan.FromHours(0))
+			//});
+			
+			ViewData["Referer"] = HttpContext.Request.Cookies["editSkill-return-url"]?.ToString();
+            // Отримайте існуючий Skill за його Id
+            //var skill = _context.Skills.Include(s => s.SkillName).FirstOrDefault(s => s.Id == id);
+            var skill = _context.Skills
 	                    .Include(s => s.SkillName)
 	                    .Include(s => s.AboutMe)
 	                    .FirstOrDefault(s => s.Id == id);
@@ -212,6 +248,15 @@ namespace HW_17_09_23.Controllers
                     skill.Percentage = model.Percentage;
                     _context.SaveChanges();
                 }
+            }
+            var returnUrl = HttpContext.Request.Cookies["editSkill-return-url"];
+            if (returnUrl != null)
+            {
+                HttpContext.Response.Cookies.Append("editSkill-return-url", "", new CookieOptions
+                {
+                    Expires = DateTime.Now.AddDays(-1)
+                });
+                //return Redirect(returnUrl.ToString());
             }
             return RedirectToAction("Index", new { id = model.AboutMeId });
         }
