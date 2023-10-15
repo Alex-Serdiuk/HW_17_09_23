@@ -1,6 +1,7 @@
 ﻿using HW_17_09_23.Models;
 using HW_17_09_23.Models.Forms;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Text.RegularExpressions;
@@ -12,17 +13,35 @@ namespace HW_17_09_23.Controllers
 	{
 		private readonly SiteDbContext _context;
 		private readonly IWebHostEnvironment _environment;
+        private readonly ILogger<HomeController> _logger;
+        private readonly UserManager<User> _userManager;
 
-		public AboutMeController(SiteDbContext context, IWebHostEnvironment environment)
+        public AboutMeController(SiteDbContext context, IWebHostEnvironment environment, ILogger<HomeController> logger, UserManager<User> userManager)
 		{
 			_context = context;
 			_environment = environment;
-		}
+            _logger = logger;
+            _userManager = userManager;
+        }
 
-		public IActionResult Index()
+		public async Task<IActionResult> Index()
 		{
-			ViewData["Title"] = "AboutMe list";
-			return View(_context.AboutMes.Include(x => x.Image).ToList());
+          
+
+            _logger.LogCritical("Some critical error !!!!!");
+            _logger.LogError("Some error !!!!!");
+
+            ViewData["Title"] = "AboutMe list";
+
+            if (HttpContext.User.Identity.IsAuthenticated)
+            {
+                var user = await _userManager.FindByNameAsync(HttpContext.User.Identity.Name);
+               
+                ViewData["Roles"] = (await _userManager.GetRolesAsync(user));
+
+            }
+
+            return View(_context.AboutMes.Include(x => x.Image).ToList());
 		}
 
         [Authorize]
